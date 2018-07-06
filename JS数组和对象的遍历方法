@@ -1,0 +1,96 @@
+本文简单解析各种数组和对象属性的遍历方法：
+原生for循环、for-in及forEach
+ES6 for-of方法遍历类数组集合
+Object.key()返回键名的集合
+jQuery的$.each()
+underscore的_.each()
+    文中的范例基于以下数组和对象。
+
+一、JS原生方法
+    1. javascript遍历的常用的遍历方法是for循环和for-in，ES5的时候加上了forEach方法（IE9以下不支持）
+    /****js原生遍历****/
+    //for循环遍历数组
+    for(var i=0;i<arrTmp.length;i++){
+        console.log(i+": "+arrTmp[i])
+    }
+
+    //for-in遍历对象属性
+    for(var i in objTmp){
+        console.log(i+": "+objTmp[i])
+    }
+
+    //forEach方法:三个参数依次是数组元素、索引、数组本身
+    arrTmp.forEach(function(value,index,array){
+        console.log(value+","+index+","+array[index])
+    })
+    2. for-in循环是为了遍历对象而设计的，事实上for-in也能用来遍历数组，但定义的索引i是字符串类型的。如果数组具有一个可枚举的方法，也会被for-in遍历到，例如：
+    //for-in也能遍历数组
+    for(var i in arrTmp){
+        console.log(i+": "+arrTmp[i])
+    }
+    //for-in会遍历到数组的属性
+    arrTmp.name="myTest";
+    for(var i in arrTmp){
+        console.log(i+":"+arrTmp[i])
+    }
+    //输出 0:value1  1:value2  2:value3  name:myTest
+    3. for循环和for-in能正确响应break、continue和return语句，但forEach不行。
+    for(var i=0;i<arrTmp.length;i++){
+    console.log(i+": "+arrTmp[i]);
+    if(i==1){
+        break;
+    }
+    }
+    arrTmp.forEach(function(value){
+        console.log(value);
+        if(value==1){
+            return;
+        }
+    })
+    4. ES6中，新增了for-of遍历方法。它被设计用来遍历各种类数组集合，例如DOM NodeList对象、Map和Set对象，甚至字符串也行。官方的说法是：for...of语句在可迭代对象(包括 Array, Map, Set, String, TypedArray，arguments 对象等等)上创建一个迭代循环，对每个不同属性的属性值,调用一个自定义的有执行语句的迭代挂钩。
+    // ES6中，新增了for-of遍历方法。它被设计用来遍历各种类数组对象，例如DOM NodeList对象、Map和Set对象，甚至字符串也行
+// for-of遍历数组，不带索引，i即为数组元素
+for(let i of arrTmp){
+    console.log(i)
+}
+//输出 "value1" "value2" "value3"
+
+// for-of遍历Map对象
+let iterable = new Map([["a", 1], ["b", 2], ["c", 3]]);
+for (let [key, value] of iterable) {
+  console.log(value);
+}
+//输出 1 2 3
+
+// for-of遍历字符串
+let iterable = "china中国";
+for (let value of iterable) {
+  console.log(value);
+}
+//输出 "c" "h" "i" "n" "a" "中" "国"
+javascript原生遍历方法的建议用法：
+用for循环遍历数组
+用for-in遍历对象
+用for-of遍历类数组对象（ES6）
+用Object.keys()获取对象属性名的集合
+
+二、jQuery的$.each
+/****$.each()遍历对象和数组****/
+$.each(arrTmp,function(index,value){
+    console.log(index+": "+value)
+});
+
+$.each(objTmp,function(key,value){
+    console.log(key+": "+value)
+});
+三、underscore的_.each()遍历
+/****_.each()遍历对象和数组****/
+//_.each()接受三个参数，分别指代键值、键名和被遍历的对象本身
+_.each(arrTmp,function(value,index,array){
+    console.log(index +","+ value +","+ array[index])
+})
+_.each(objTmp,function(value,key,obj){
+    console.log(key +","+ value +","+ obj[key])
+})
+
+       
